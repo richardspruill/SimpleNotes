@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.simple.apps.simplenotes.Models.Note;
+import com.simple.apps.simplenotes.R;
 
 import java.util.List;
 
@@ -23,6 +25,18 @@ public class NoteAdapter extends BaseAdapter {
     public NoteAdapter(Context context, List<Note> notes){
         this.context = context;
         this.notes = notes;
+    }
+
+    public void addAll(List<Note> notes){
+        this.notes.addAll(notes);
+    }
+
+    public void add(Note note){
+        notes.add(note);
+    }
+
+    public void clear(){
+        notes.clear();
     }
 
     /**
@@ -58,6 +72,10 @@ public class NoteAdapter extends BaseAdapter {
         return position;
     }
 
+    public class Holder{
+        TextView title;
+    }
+
     /**
      * Get a View that displays the data at the specified position in the data set. You can either
      * create a View manually or inflate it from an XML layout file. When the View is inflated, the
@@ -78,7 +96,11 @@ public class NoteAdapter extends BaseAdapter {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        return null;
+        Holder holder = new Holder();
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View row = inflater.inflate(R.layout.listitem_note, null);
+        holder.title = (TextView)row.findViewById(R.id.textView_note_item);
+        holder.title.setText(notes.get(position).getTitle());
+        return row;
     }
 }
