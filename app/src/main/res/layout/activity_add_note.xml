@@ -9,7 +9,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:weightSum="10"
-    tools:context="com.simple.apps.simplenotes.AddNoteActivity">
+    tools:context=".NoteActivity"
+    android:background="@color/white">
 
     <EditText
         android:id="@+id/editText_Title"
@@ -42,17 +43,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancel"
+            android:text="@string/btn_cancel"
             android:id="@+id/btn_cancel"
-            style="@style/MaterialButton"/>
+            android:theme="@style/MaterialButtonNegative"/>
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Add Note"
+            android:text="@string/btn_accept"
             android:id="@+id/btn_add_note"
-            style="@style/MaterialButton"/>
+            android:theme="@style/MaterialButtonPositive"/>
 
     </LinearLayout>
 

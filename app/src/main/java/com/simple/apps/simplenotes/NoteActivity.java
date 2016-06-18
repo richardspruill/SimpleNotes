@@ -12,10 +12,12 @@ import com.simple.apps.simplenotes.Models.Note;
 
 import java.util.Date;
 
-public class AddNoteActivity extends AppCompatActivity {
+public class NoteActivity extends AppCompatActivity {
     private EditText title;
     private EditText text;
     private DatabaseHelper database;
+    private boolean editing;
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,9 @@ public class AddNoteActivity extends AppCompatActivity {
 
     private void setupUI() {
         getSupportActionBar().setTitle("Add Note");
+        title = (EditText)findViewById(R.id.editText_Title);
+        text = (EditText)findViewById(R.id.editText_note);
+        Bundle extras = getIntent().getExtras();
         Button accept = (Button) findViewById(R.id.btn_add_note);
         Button cancel = (Button) findViewById(R.id.btn_cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -42,10 +47,20 @@ public class AddNoteActivity extends AppCompatActivity {
                 accept(v);
             }
         });
-        title = (EditText)findViewById(R.id.editText_Title);
-        title.requestFocus();
-        text = (EditText)findViewById(R.id.editText_note);
         database = new DatabaseHelper(this);
+
+        if (extras != null){
+            editing = true;
+            int id = extras.getInt(Note.ID_KEY);
+            Note note = database.getNote(id);
+            if (note == null) return;
+            title.setText(note.getTitle());
+            text.setText(note.getText());
+            this.id = id;
+        } else {
+            editing = false;
+            title.requestFocus();
+        }
     }
 
     private void cancel() {
@@ -63,8 +78,14 @@ public class AddNoteActivity extends AppCompatActivity {
             return;
         }
 
+        Note note1 = new Note(note, sTitle, new Date());
+        if (editing){
+            note1.setId(id);
+            database.updateNote(note1);
+        } else {
+            database.addNote(note1);
+        }
 
-        database.addNote(new Note(note, sTitle, new Date()));
         setResult(RESULT_OK);
         finish();
     }

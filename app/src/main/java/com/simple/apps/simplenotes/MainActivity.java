@@ -9,10 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.simple.apps.simplenotes.Adapter.NoteAdapter;
 import com.simple.apps.simplenotes.Helper.DatabaseHelper;
@@ -20,11 +19,16 @@ import com.simple.apps.simplenotes.Models.Note;
 
 import java.util.ArrayList;
 
+/**
+ * Displays every Note by the corresponding title. By clicking on a Note, it will open an activity to view/edit that note.
+ */
 public class MainActivity extends AppCompatActivity {
     private NoteAdapter noteAdapter;
     private DatabaseHelper database;
-    private static final int REQUEST_ADD_NOTE = 7;
+    public static final int REQUEST_ADD_NOTE = 7;
+    public static final int REQUEST_EDIT_NOTE = 8;
     private TextView emptyView;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addNote(){
-        startActivityForResult(new Intent(this, AddNoteActivity.class), REQUEST_ADD_NOTE);
+        startActivityForResult(new Intent(this, NoteActivity.class), REQUEST_ADD_NOTE);
     }
 
     /**
@@ -81,9 +85,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ListView listView = (ListView) findViewById(R.id.listView);
+        listView = (ListView) findViewById(R.id.listView);
         noteAdapter = new NoteAdapter(this, new ArrayList<Note>());
+
         listView.setAdapter(noteAdapter);
+
         database = new DatabaseHelper(this);
         emptyView = (TextView)findViewById(R.id.empty);
         loadListView();
@@ -96,6 +102,14 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK){
                     Snackbar.make(findViewById(R.id.listView), "Your Note was successfully added!", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
+                    loadListView();
+                }
+            }
+            case REQUEST_EDIT_NOTE:{
+                if (resultCode == RESULT_OK){
+                    Snackbar.make(findViewById(R.id.listView), "Your Note was successfully edited!", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    loadListView();
                 }
             }
         }
@@ -108,12 +122,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadListView(){
-        noteAdapter.clear();
-        noteAdapter.addAll(database.getAllNotes());
-        noteAdapter.notifyDataSetChanged();
-        if (noteAdapter.getCount() == 0)
-            emptyView.setVisibility(View.VISIBLE);
-        else
-            emptyView.setVisibility(View.GONE);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                noteAdapter.clear();
+                noteAdapter.addAll(database.getAllNotes());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        noteAdapter.notifyDataSetChanged();
+                        if (noteAdapter.getCount() == 0)
+                            emptyView.setVisibility(View.VISIBLE);
+                        else
+                            emptyView.setVisibility(View.GONE);
+                    }
+                });
+
+            }
+        }).start();
+
+
+
     }
 }

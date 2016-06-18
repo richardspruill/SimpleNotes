@@ -22,4 +22,14 @@
         <item name="colorButtonNormal">#64DD17</item>
     </style>
 
+    <style name="MaterialButtonPositive" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorControlHighlight">#33691E</item>
+        <item name="colorButtonNormal">@color/colorPositiveButton</item>
+    </style>
+
+    <style name="MaterialButtonNegative" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorControlHighlight">#33691E</item>
+        <item name="colorButtonNormal">@color/colorNegativeButton</item>
+    </style>
+
 </resources>

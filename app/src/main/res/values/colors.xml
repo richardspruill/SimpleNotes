@@ -4,4 +4,10 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="grey">#9E9E9E</color>
+    <color name="light_grey">#EEEEEE</color>
+    <color name="red">#f44336</color>
+    <color name="colorPositiveButton">#64DD17</color>
+    <color name="colorNegativeButton">@color/red</color>
 </resources>
